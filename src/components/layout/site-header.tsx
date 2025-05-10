@@ -1,7 +1,8 @@
+// src/components/layout/site-header.tsx
 'use client';
 
 import Link from 'next/link';
-import { BotMessageSquare, FileText, Home, Search } from 'lucide-react';
+import { BotMessageSquare, Home, Search, Users } from 'lucide-react'; // Added Users icon
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
@@ -11,6 +12,7 @@ export function SiteHeader() {
   const navItems = [
     { href: '/', label: 'Upload Invoice', icon: Home },
     { href: '/reports', label: 'View Reports', icon: Search },
+    { href: '/clients', label: 'Clients', icon: Users }, // Added Clients link
   ];
 
   return (
@@ -20,17 +22,17 @@ export function SiteHeader() {
           <BotMessageSquare className="h-6 w-6 text-primary" />
           <span className="font-bold">InvoiceAI</span>
         </Link>
-        <nav className="flex items-center space-x-6 text-sm font-medium">
+        <nav className="flex items-center space-x-4 text-sm font-medium md:space-x-6">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                'transition-colors hover:text-primary',
+                'transition-colors hover:text-primary flex items-center',
                 pathname === item.href ? 'text-primary' : 'text-muted-foreground'
               )}
             >
-              <item.icon className="mr-1 inline-block h-4 w-4" />
+              <item.icon className="mr-1 hidden h-4 w-4 sm:inline-block" />
               {item.label}
             </Link>
           ))}

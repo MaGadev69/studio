@@ -1,8 +1,9 @@
+// src/components/invoice/invoice-list-item.tsx
 'use client';
 
 import type { StoredInvoice } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Building, CalendarDays, DollarSign, FileText, List, User } from 'lucide-react';
+import { Building, CalendarDays, DollarSign, FileText, List, User, Fingerprint } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 
@@ -13,8 +14,7 @@ interface InvoiceListItemProps {
 export function InvoiceListItem({ invoice }: InvoiceListItemProps) {
   let displayDate = 'N/A';
   try {
-    // Attempt to parse common date formats if not already in ISO
-    const dateParts = invoice.invoiceDate.split(/[\/\-\.]/); // Handles YYYY-MM-DD, DD/MM/YYYY etc.
+    const dateParts = invoice.invoiceDate.split(/[\/\-\.]/);
     let parsedDate: Date;
     if (dateParts.length === 3) {
         if (dateParts[0].length === 4) { // YYYY-MM-DD
@@ -23,7 +23,7 @@ export function InvoiceListItem({ invoice }: InvoiceListItemProps) {
              parsedDate = new Date(parseInt(dateParts[2]), parseInt(dateParts[1]) - 1, parseInt(dateParts[0]));
         }
     } else {
-        parsedDate = new Date(invoice.invoiceDate); // Fallback to direct parsing
+        parsedDate = new Date(invoice.invoiceDate); 
     }
     if (!isNaN(parsedDate.getTime())) {
         displayDate = format(parsedDate, 'PPP');
@@ -31,7 +31,6 @@ export function InvoiceListItem({ invoice }: InvoiceListItemProps) {
   } catch (e) {
     console.warn(`Could not parse date for list item: ${invoice.invoiceDate}`);
   }
-
 
   return (
     <Card className="mb-4 shadow-md hover:shadow-lg transition-shadow duration-200">
@@ -43,13 +42,15 @@ export function InvoiceListItem({ invoice }: InvoiceListItemProps) {
           </span>
           <Badge variant="outline">{displayDate}</Badge>
         </CardTitle>
-        <CardDescription>Client DNI: {invoice.userDni}</CardDescription>
+        <CardDescription className="flex items-center">
+            <Fingerprint className="mr-1 h-4 w-4 text-muted-foreground" /> Client DNI: {invoice.clientDni}
+        </CardDescription>
       </CardHeader>
       <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
         <div>
           <h4 className="font-semibold flex items-center mb-1">
             <User className="mr-2 h-4 w-4 text-muted-foreground" />
-            Client Details
+            Client Details (from invoice)
           </h4>
           <p className="text-muted-foreground truncate">{invoice.clientDetails || 'N/A'}</p>
         </div>

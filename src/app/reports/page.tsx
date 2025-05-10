@@ -16,12 +16,10 @@ export default function ReportsPage() {
   const handleFilterInvoices = (filters: InvoiceFilterFormValues) => {
     setIsFiltering(true);
     setHasSearched(true);
-    // Simulate API call delay for realism if desired
-    // setTimeout(() => {
-      const invoices = getFilteredInvoicesFromStorage(filters.dni, filters.startDate, filters.endDate);
-      setFilteredInvoices(invoices);
-      setIsFiltering(false);
-    // }, 500);
+    // The `filters.dni` from the form will be used to match `clientDni` in `getFilteredInvoicesFromStorage`
+    const invoices = getFilteredInvoicesFromStorage(filters.dni, filters.startDate, filters.endDate);
+    setFilteredInvoices(invoices);
+    setIsFiltering(false);
   };
 
   return (
