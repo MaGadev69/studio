@@ -30,11 +30,20 @@ export const getFilteredInvoicesFromStorage = (dni: string, startDate?: Date, en
   if (typeof window === 'undefined') return [];
   const allInvoices = getInvoicesFromStorage();
   return allInvoices.filter(invoice => {
-    const matchesDni = invoice.clientDni.toLowerCase() === dni.toLowerCase();
+    // Ensure clientDni exists and is a string before calling toLowerCase
+    const matchesDni = invoice.clientDni && typeof invoice.clientDni === 'string' 
+      ? invoice.clientDni.toLowerCase() === dni.toLowerCase()
+      : false;
+      
     if (!matchesDni) return false;
 
     let invoiceDateObj: Date;
     try {
+        // Ensure invoiceDate exists and is a string
+        if (!invoice.invoiceDate || typeof invoice.invoiceDate !== 'string') {
+            console.warn(`Missing or invalid invoiceDate for invoice ${invoice.id}`);
+            return false;
+        }
         const dateParts = invoice.invoiceDate.split(/[\/\-\.]/); 
         if (dateParts.length === 3) {
             if (dateParts[0].length === 4) { // YYYY-MM-DD or YYYY/MM/DD or YYYY.MM.DD
@@ -67,3 +76,4 @@ export const getFilteredInvoicesFromStorage = (dni: string, startDate?: Date, en
     return matchesStartDate && matchesEndDate;
   });
 };
+
