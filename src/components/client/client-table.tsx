@@ -26,9 +26,9 @@ export function ClientTable({ clients, onEditClient, onDeleteClient }: ClientTab
     return (
       <Alert className="mt-6">
         <AlertCircle className="h-4 w-4" />
-        <AlertTitle>No Clients Found</AlertTitle>
+        <AlertTitle>No se Encontraron Clientes</AlertTitle>
         <AlertDescription>
-          You haven't added any clients yet. Click "Add New Client" to get started.
+          Aún no has agregado ningún cliente. Haz clic en "Agregar Nuevo Cliente" para comenzar.
         </AlertDescription>
       </Alert>
     );
@@ -38,12 +38,12 @@ export function ClientTable({ clients, onEditClient, onDeleteClient }: ClientTab
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
+            <TableHead>Nombre</TableHead>
             <TableHead>DNI</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Phone</TableHead>
-            <TableHead>Address</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>Correo Electrónico</TableHead>
+            <TableHead>Teléfono</TableHead>
+            <TableHead>Dirección</TableHead>
+            <TableHead className="text-right">Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

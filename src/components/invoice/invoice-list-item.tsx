@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Building, CalendarDays, DollarSign, FileText, List, User, Fingerprint } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 interface InvoiceListItemProps {
   invoice: StoredInvoice;
@@ -26,10 +27,10 @@ export function InvoiceListItem({ invoice }: InvoiceListItemProps) {
         parsedDate = new Date(invoice.invoiceDate); 
     }
     if (!isNaN(parsedDate.getTime())) {
-        displayDate = format(parsedDate, 'PPP');
+        displayDate = format(parsedDate, 'PPP', { locale: es });
     }
   } catch (e) {
-    console.warn(`Could not parse date for list item: ${invoice.invoiceDate}`);
+    console.warn(`No se pudo analizar la fecha para el ítem de la lista: ${invoice.invoiceDate}`);
   }
 
   return (
@@ -38,33 +39,33 @@ export function InvoiceListItem({ invoice }: InvoiceListItemProps) {
         <CardTitle className="flex items-center justify-between text-lg">
           <span className="flex items-center">
             <FileText className="mr-2 h-5 w-5 text-primary" />
-            Invoice #{invoice.invoiceNumber || 'N/A'}
+            Factura #{invoice.invoiceNumber || 'N/A'}
           </span>
           <Badge variant="outline">{displayDate}</Badge>
         </CardTitle>
         <CardDescription className="flex items-center">
-            <Fingerprint className="mr-1 h-4 w-4 text-muted-foreground" /> Client DNI: {invoice.clientDni}
+            <Fingerprint className="mr-1 h-4 w-4 text-muted-foreground" /> DNI Cliente: {invoice.clientDni}
         </CardDescription>
       </CardHeader>
       <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
         <div>
           <h4 className="font-semibold flex items-center mb-1">
             <User className="mr-2 h-4 w-4 text-muted-foreground" />
-            Client Details (from invoice)
+            Detalles del Cliente (de la factura)
           </h4>
           <p className="text-muted-foreground truncate">{invoice.clientDetails || 'N/A'}</p>
         </div>
         <div>
           <h4 className="font-semibold flex items-center mb-1">
             <Building className="mr-2 h-4 w-4 text-muted-foreground" />
-            Company Details
+            Detalles de la Empresa
           </h4>
           <p className="text-muted-foreground truncate">{invoice.companyDetails || 'N/A'}</p>
         </div>
         <div className="md:col-span-2">
           <h4 className="font-semibold flex items-center mb-1">
             <List className="mr-2 h-4 w-4 text-muted-foreground" />
-            Items ({invoice.items?.length || 0})
+            Ítems ({invoice.items?.length || 0})
           </h4>
           {invoice.items && invoice.items.length > 0 ? (
             <ul className="list-disc pl-5 text-muted-foreground max-h-20 overflow-y-auto">
@@ -73,15 +74,15 @@ export function InvoiceListItem({ invoice }: InvoiceListItemProps) {
               ))}
             </ul>
           ) : (
-            <p className="text-muted-foreground">No items listed.</p>
+            <p className="text-muted-foreground">No hay ítems listados.</p>
           )}
         </div>
       </CardContent>
       <CardFooter className="flex justify-between items-center">
-        <p className="text-xs text-muted-foreground">Uploaded: {format(new Date(invoice.uploadDate), 'PPP p')}</p>
+        <p className="text-xs text-muted-foreground">Subido: {format(new Date(invoice.uploadDate), 'PPP p', { locale: es })}</p>
         <div className="flex items-center font-semibold text-lg text-primary">
           <DollarSign className="mr-1 h-5 w-5" />
-          {invoice.totalAmount?.toLocaleString(undefined, { style: 'currency', currency: 'USD' }) || 'N/A'}
+          {invoice.totalAmount?.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }) || 'N/A'}
         </div>
       </CardFooter>
     </Card>

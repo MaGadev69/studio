@@ -14,10 +14,10 @@ interface ClientTableActionsProps {
 export function ClientTableActions({ client, onEdit, onDelete }: ClientTableActionsProps) {
   return (
     <div className="flex space-x-2">
-      <Button variant="outline" size="icon" onClick={() => onEdit(client)} aria-label="Edit client">
+      <Button variant="outline" size="icon" onClick={() => onEdit(client)} aria-label="Editar cliente">
         <Edit3 className="h-4 w-4" />
       </Button>
-      <Button variant="destructive" size="icon" onClick={() => onDelete(client)} aria-label="Delete client">
+      <Button variant="destructive" size="icon" onClick={() => onDelete(client)} aria-label="Eliminar cliente">
         <Trash2 className="h-4 w-4" />
       </Button>
     </div>

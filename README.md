@@ -28,4 +28,5 @@ En resumen:
 
 Terminal 1: npm install (solo la primera vez) y luego npm run dev
 Terminal 2: npm run genkit:dev (o genkit:watch)
-Con estos dos servidores en ejecución, deberías poder acceder a tu aplicación en el navegador (usualmente en http://localhost:9002) y las funciones de IA deberían estar operativas.
+
+Con estos dos servidores en ejecución, deberías poder acceder a tu aplicación MVP-Estudio-Sanchez en el navegador (usualmente en http://localhost:9002) y las funciones de IA deberían estar operativas.

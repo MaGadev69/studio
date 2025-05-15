@@ -43,16 +43,16 @@ export function ClientFormDialog({ isOpen, onOpenChange, clientToEdit, onSubmit,
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{clientToEdit ? 'Edit Client' : 'Add New Client'}</DialogTitle>
+          <DialogTitle>{clientToEdit ? 'Editar Cliente' : 'Agregar Nuevo Cliente'}</DialogTitle>
           <DialogDescription>
-            {clientToEdit ? "Update the client's details below." : "Enter the new client's details."}
+            {clientToEdit ? "Actualiza los detalles del cliente a continuación." : "Ingresa los detalles del nuevo cliente."}
           </DialogDescription>
         </DialogHeader>
         <ClientForm
           initialData={clientToEdit}
           onSubmit={handleSubmit}
           isSubmitting={isSubmitting}
-          submitButtonText={clientToEdit ? 'Save Changes' : 'Add Client'}
+          submitButtonText={clientToEdit ? 'Guardar Cambios' : 'Agregar Cliente'}
         />
       </DialogContent>
     </Dialog>
@@ -73,17 +73,17 @@ export function DeleteClientDialog({ isOpen, onOpenChange, onConfirm, clientName
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure you want to delete this client?</AlertDialogTitle>
+          <AlertDialogTitle>¿Estás seguro de que quieres eliminar este cliente?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the client
+            Esta acción no se puede deshacer. Esto eliminará permanentemente al cliente
             {clientName && <span className="font-semibold"> {clientName}</span>}.
-            Associated invoices will remain but may lose their direct client link if not updated.
+            Las facturas asociadas permanecerán pero podrían perder su enlace directo al cliente si no se actualizan.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm} disabled={isDeleting} className="bg-destructive hover:bg-destructive/90">
-            {isDeleting ? 'Deleting...' : 'Delete'}
+            {isDeleting ? 'Eliminando...' : 'Eliminar'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

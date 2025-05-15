@@ -10,9 +10,9 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   const navItems = [
-    { href: '/', label: 'Upload Invoice', icon: Home },
-    { href: '/reports', label: 'View Reports', icon: Search },
-    { href: '/clients', label: 'Clients', icon: Users }, // Added Clients link
+    { href: '/', label: 'Subir Factura', icon: Home },
+    { href: '/reports', label: 'Ver Reportes', icon: Search },
+    { href: '/clients', label: 'Clientes', icon: Users }, 
   ];
 
   return (
@@ -20,7 +20,7 @@ export function SiteHeader() {
       <div className="container flex h-16 items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <BotMessageSquare className="h-6 w-6 text-primary" />
-          <span className="font-bold">InvoiceAI</span>
+          <span className="font-bold">MVP-Estudio-Sanchez</span>
         </Link>
         <nav className="flex items-center space-x-4 text-sm font-medium md:space-x-6">
           {navItems.map((item) => (

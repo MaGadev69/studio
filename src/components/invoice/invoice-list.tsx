@@ -16,9 +16,9 @@ export function InvoiceList({ invoices }: InvoiceListProps) {
     return (
        <Alert className="mt-6">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>No Invoices Found</AlertTitle>
+          <AlertTitle>No se Encontraron Facturas</AlertTitle>
           <AlertDescription>
-            No invoices match your current filter criteria. Try adjusting your search.
+            Ninguna factura coincide con tus criterios de filtro actuales. Intenta ajustar tu búsqueda.
           </AlertDescription>
         </Alert>
     );

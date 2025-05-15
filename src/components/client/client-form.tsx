@@ -11,9 +11,9 @@ import type { Client } from '@/lib/types';
 import { Fingerprint, User, Mail, Phone, MapPin } from 'lucide-react';
 
 const clientFormSchema = z.object({
-  dni: z.string().min(1, { message: 'DNI is required.' }).regex(/^\d{7,8}[A-Za-z]?$/, { message: 'Invalid DNI format (e.g., 12345678A).' }),
-  name: z.string().min(1, { message: 'Name is required.' }),
-  email: z.string().email({ message: 'Invalid email address.' }).optional().or(z.literal('')),
+  dni: z.string().min(1, { message: 'El DNI es obligatorio.' }).regex(/^\d{7,8}[A-Za-z]?$/, { message: 'Formato de DNI inválido (ej: 12345678A).' }),
+  name: z.string().min(1, { message: 'El nombre es obligatorio.' }),
+  email: z.string().email({ message: 'Dirección de correo electrónico inválida.' }).optional().or(z.literal('')),
   phone: z.string().optional().or(z.literal('')),
   address: z.string().optional().or(z.literal('')),
 });
@@ -27,7 +27,7 @@ interface ClientFormProps {
   submitButtonText?: string;
 }
 
-export function ClientForm({ initialData, onSubmit, isSubmitting = false, submitButtonText = 'Save Client' }: ClientFormProps) {
+export function ClientForm({ initialData, onSubmit, isSubmitting = false, submitButtonText = 'Guardar Cliente' }: ClientFormProps) {
   const form = useForm<ClientFormValues>({
     resolver: zodResolver(clientFormSchema),
     defaultValues: {
@@ -49,7 +49,7 @@ export function ClientForm({ initialData, onSubmit, isSubmitting = false, submit
             <FormItem>
               <FormLabel className="flex items-center"><Fingerprint className="mr-2 h-4 w-4 text-muted-foreground" />DNI</FormLabel>
               <FormControl>
-                <Input placeholder="Enter client's DNI" {...field} />
+                <Input placeholder="Ingresa el DNI del cliente" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -60,9 +60,9 @@ export function ClientForm({ initialData, onSubmit, isSubmitting = false, submit
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="flex items-center"><User className="mr-2 h-4 w-4 text-muted-foreground" />Name</FormLabel>
+              <FormLabel className="flex items-center"><User className="mr-2 h-4 w-4 text-muted-foreground" />Nombre</FormLabel>
               <FormControl>
-                <Input placeholder="Enter client's full name" {...field} />
+                <Input placeholder="Ingresa el nombre completo del cliente" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -73,9 +73,9 @@ export function ClientForm({ initialData, onSubmit, isSubmitting = false, submit
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="flex items-center"><Mail className="mr-2 h-4 w-4 text-muted-foreground" />Email (Optional)</FormLabel>
+              <FormLabel className="flex items-center"><Mail className="mr-2 h-4 w-4 text-muted-foreground" />Correo Electrónico (Opcional)</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="Enter client's email" {...field} />
+                <Input type="email" placeholder="Ingresa el correo electrónico del cliente" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -86,9 +86,9 @@ export function ClientForm({ initialData, onSubmit, isSubmitting = false, submit
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="flex items-center"><Phone className="mr-2 h-4 w-4 text-muted-foreground" />Phone (Optional)</FormLabel>
+              <FormLabel className="flex items-center"><Phone className="mr-2 h-4 w-4 text-muted-foreground" />Teléfono (Opcional)</FormLabel>
               <FormControl>
-                <Input placeholder="Enter client's phone number" {...field} />
+                <Input placeholder="Ingresa el número de teléfono del cliente" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -99,16 +99,16 @@ export function ClientForm({ initialData, onSubmit, isSubmitting = false, submit
           name="address"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="flex items-center"><MapPin className="mr-2 h-4 w-4 text-muted-foreground" />Address (Optional)</FormLabel>
+              <FormLabel className="flex items-center"><MapPin className="mr-2 h-4 w-4 text-muted-foreground" />Dirección (Opcional)</FormLabel>
               <FormControl>
-                <Input placeholder="Enter client's address" {...field} />
+                <Input placeholder="Ingresa la dirección del cliente" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
-          {isSubmitting ? 'Saving...' : submitButtonText}
+          {isSubmitting ? 'Guardando...' : submitButtonText}
         </Button>
       </form>
     </Form>

@@ -11,12 +11,13 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { CalendarIcon, Fingerprint, Filter, Search } from 'lucide-react';
 import { useState } from 'react';
 
 
 const invoiceFilterSchema = z.object({
-  dni: z.string().min(1, { message: 'DNI is required.' }).regex(/^\d{7,8}[A-Za-z]?$/, { message: 'Invalid DNI format.'}),
+  dni: z.string().min(1, { message: 'El DNI es obligatorio.' }).regex(/^\d{7,8}[A-Za-z]?$/, { message: 'Formato de DNI inválido.'}),
   startDate: z.date().optional(),
   endDate: z.date().optional(),
 }).refine(data => {
@@ -25,7 +26,7 @@ const invoiceFilterSchema = z.object({
   }
   return true;
 }, {
-  message: "End date cannot be earlier than start date.",
+  message: "La fecha de fin no puede ser anterior a la fecha de inicio.",
   path: ["endDate"],
 });
 
@@ -53,7 +54,7 @@ export function InvoiceFilterForm({ onFilter, isFiltering }: InvoiceFilterFormPr
       <CardHeader>
         <CardTitle className="flex items-center">
           <Filter className="mr-2 h-6 w-6 text-primary" />
-          Filter Invoices
+          Filtrar Facturas
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -66,10 +67,10 @@ export function InvoiceFilterForm({ onFilter, isFiltering }: InvoiceFilterFormPr
                 <FormItem>
                   <FormLabel className="flex items-center">
                     <Fingerprint className="mr-2 h-5 w-5 text-muted-foreground" />
-                    Client DNI
+                    DNI del Cliente
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter client's DNI" {...field} />
+                    <Input placeholder="Ingresa el DNI del cliente" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -82,7 +83,7 @@ export function InvoiceFilterForm({ onFilter, isFiltering }: InvoiceFilterFormPr
                 name="startDate"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Start Date</FormLabel>
+                    <FormLabel>Fecha de Inicio</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -94,7 +95,7 @@ export function InvoiceFilterForm({ onFilter, isFiltering }: InvoiceFilterFormPr
                             )}
                           >
                             <CalendarIcon className="mr-2 h-4 w-4" />
-                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                            {field.value ? format(field.value, "PPP", { locale: es }) : <span>Elige una fecha</span>}
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
@@ -105,6 +106,7 @@ export function InvoiceFilterForm({ onFilter, isFiltering }: InvoiceFilterFormPr
                           onSelect={field.onChange}
                           disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
                           initialFocus
+                          locale={es}
                         />
                       </PopoverContent>
                     </Popover>
@@ -118,7 +120,7 @@ export function InvoiceFilterForm({ onFilter, isFiltering }: InvoiceFilterFormPr
                 name="endDate"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>End Date</FormLabel>
+                    <FormLabel>Fecha de Fin</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -130,7 +132,7 @@ export function InvoiceFilterForm({ onFilter, isFiltering }: InvoiceFilterFormPr
                             )}
                           >
                             <CalendarIcon className="mr-2 h-4 w-4" />
-                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                            {field.value ? format(field.value, "PPP", { locale: es }) : <span>Elige una fecha</span>}
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
@@ -141,6 +143,7 @@ export function InvoiceFilterForm({ onFilter, isFiltering }: InvoiceFilterFormPr
                           onSelect={field.onChange}
                           disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
                           initialFocus
+                          locale={es}
                         />
                       </PopoverContent>
                     </Popover>
@@ -156,7 +159,7 @@ export function InvoiceFilterForm({ onFilter, isFiltering }: InvoiceFilterFormPr
               ) : (
                 <Search className="mr-2 h-4 w-4" />
               )}
-              Search Invoices
+              Buscar Facturas
             </Button>
           </form>
         </Form>

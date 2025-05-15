@@ -45,15 +45,15 @@ export default function ClientsPage() {
         const updatedClient = { ...values, id: clientId };
         const updatedClients = updateClientInStorage(updatedClient);
         setClients(updatedClients);
-        toast({ title: 'Client Updated', description: `Client "${values.name}" has been updated.` });
+        toast({ title: 'Cliente Actualizado', description: `El cliente "${values.name}" ha sido actualizado.` });
       } else {
         const newClient = addClientToStorage(values);
         setClients(prev => [...prev, newClient]);
-        toast({ title: 'Client Added', description: `Client "${values.name}" has been added.` });
+        toast({ title: 'Cliente Agregado', description: `El cliente "${values.name}" ha sido agregado.` });
       }
       setIsFormDialogOpen(false);
     } catch (error) {
-      toast({ title: 'Error', description: 'Failed to save client.', variant: 'destructive' });
+      toast({ title: 'Error', description: 'Error al guardar el cliente.', variant: 'destructive' });
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -66,11 +66,11 @@ export default function ClientsPage() {
     try {
       const updatedClients = deleteClientFromStorage(selectedClient.id);
       setClients(updatedClients);
-      toast({ title: 'Client Deleted', description: `Client "${selectedClient.name}" has been deleted.` });
+      toast({ title: 'Cliente Eliminado', description: `El cliente "${selectedClient.name}" ha sido eliminado.` });
       setIsDeleteDialogOpen(false);
       setSelectedClient(null);
     } catch (error) {
-      toast({ title: 'Error', description: 'Failed to delete client.', variant: 'destructive' });
+      toast({ title: 'Error', description: 'Error al eliminar el cliente.', variant: 'destructive' });
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -82,10 +82,10 @@ export default function ClientsPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold flex items-center">
           <Users className="mr-3 h-8 w-8 text-primary" />
-          Manage Clients
+          Gestionar Clientes
         </h1>
         <Button onClick={() => handleOpenFormDialog()}>
-          <PlusCircle className="mr-2 h-4 w-4" /> Add New Client
+          <PlusCircle className="mr-2 h-4 w-4" /> Agregar Nuevo Cliente
         </Button>
       </div>
 

@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Documentos_AI',
-  description: 'AI-powered invoice data extraction and management',
+  title: 'MVP-Estudio-Sanchez',
+  description: 'Extracción y gestión de datos de facturas impulsada por IA',
 };
 
 export default function RootLayout({
@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="es">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <div className="flex min-h-screen flex-col">
           <SiteHeader />

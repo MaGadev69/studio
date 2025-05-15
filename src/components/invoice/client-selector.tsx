@@ -31,7 +31,7 @@ export function ClientSelector({ onClientSelected }: ClientSelectorProps) {
       try {
         setClients(getClientsFromStorage());
       } catch (error) {
-        toast({ title: 'Error', description: 'Failed to load clients.', variant: 'destructive' });
+        toast({ title: 'Error', description: 'Error al cargar los clientes.', variant: 'destructive' });
       } finally {
         setIsLoading(false);
       }
@@ -56,9 +56,9 @@ export function ClientSelector({ onClientSelected }: ClientSelectorProps) {
       setSelectedClientId(newClient.id); // Auto-select the new client
       onClientSelected(newClient);
       setIsFormDialogOpen(false);
-      toast({ title: 'Client Added', description: `Client "${newClient.name}" has been added and selected.` });
+      toast({ title: 'Cliente Agregado', description: `El cliente "${newClient.name}" ha sido agregado y seleccionado.` });
     } catch (error) {
-      toast({ title: 'Error', description: 'Failed to add new client.', variant: 'destructive' });
+      toast({ title: 'Error', description: 'Error al agregar nuevo cliente.', variant: 'destructive' });
     } finally {
       setIsSubmittingClient(false);
     }
@@ -68,12 +68,12 @@ export function ClientSelector({ onClientSelected }: ClientSelectorProps) {
     return (
       <Card className="w-full shadow-lg">
         <CardHeader>
-          <CardTitle className="flex items-center"><Users className="mr-2 h-6 w-6 text-primary" />Select Client</CardTitle>
-          <CardDescription>Choose an existing client or add a new one to proceed.</CardDescription>
+          <CardTitle className="flex items-center"><Users className="mr-2 h-6 w-6 text-primary" />Seleccionar Cliente</CardTitle>
+          <CardDescription>Elige un cliente existente o agrega uno nuevo para continuar.</CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center items-center h-32">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="ml-2">Loading clients...</p>
+          <p className="ml-2">Cargando clientes...</p>
         </CardContent>
       </Card>
     );
@@ -82,14 +82,14 @@ export function ClientSelector({ onClientSelected }: ClientSelectorProps) {
   return (
     <Card className="w-full shadow-lg">
       <CardHeader>
-        <CardTitle className="flex items-center"><Users className="mr-2 h-6 w-6 text-primary" />Select Client</CardTitle>
-        <CardDescription>Choose an existing client or add a new one to proceed.</CardDescription>
+        <CardTitle className="flex items-center"><Users className="mr-2 h-6 w-6 text-primary" />Seleccionar Cliente</CardTitle>
+        <CardDescription>Elige un cliente existente o agrega uno nuevo para continuar.</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           <Select onValueChange={handleClientSelectionChange} value={selectedClientId}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select an existing client" />
+              <SelectValue placeholder="Selecciona un cliente existente" />
             </SelectTrigger>
             <SelectContent>
               {clients.length > 0 ? (
@@ -99,13 +99,13 @@ export function ClientSelector({ onClientSelected }: ClientSelectorProps) {
                   </SelectItem>
                 ))
               ) : (
-                <div className="p-4 text-center text-sm text-muted-foreground">No clients found. Add a new one.</div>
+                <div className="p-4 text-center text-sm text-muted-foreground">No se encontraron clientes. Agrega uno nuevo.</div>
               )}
             </SelectContent>
           </Select>
 
           <Button variant="outline" onClick={() => setIsFormDialogOpen(true)} className="w-full sm:w-auto">
-            <PlusCircle className="mr-2 h-4 w-4" /> Add New Client
+            <PlusCircle className="mr-2 h-4 w-4" /> Agregar Nuevo Cliente
           </Button>
         </div>
       </CardContent>

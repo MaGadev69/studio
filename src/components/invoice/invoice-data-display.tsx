@@ -39,7 +39,7 @@ export function InvoiceDataDisplay({
       clientDni,
     };
     saveInvoiceToStorage(newInvoice);
-    toast({ title: 'Invoice Saved', description: `Invoice "${fileName}" has been saved successfully for client DNI ${clientDni}.` });
+    toast({ title: 'Factura Guardada', description: `La factura "${fileName}" ha sido guardada exitosamente para el cliente con DNI ${clientDni}.` });
     onInvoiceSaved();
   };
 
@@ -57,7 +57,7 @@ export function InvoiceDataDisplay({
               {value.map((item, index) => <li key={index}>{item}</li>)}
             </ul>
           ) : typeof value === 'boolean' ? (
-             <Badge variant={value ? "default" : "secondary"}>{value ? 'Yes' : 'No'}</Badge>
+             <Badge variant={value ? "default" : "secondary"}>{value ? 'Sí' : 'No'}</Badge>
           ) : (
             <p className="text-sm text-muted-foreground">{String(value)}</p>
           )}
@@ -71,36 +71,36 @@ export function InvoiceDataDisplay({
       <CardHeader>
         <CardTitle className="flex items-center">
           <FileText className="mr-2 h-6 w-6 text-primary" />
-          Extracted Invoice Data
+          Datos de Factura Extraídos
         </CardTitle>
-        <CardDescription>Review the extracted information for client DNI: <span className="font-semibold">{clientDni}</span>.</CardDescription>
+        <CardDescription>Revisa la información extraída para el cliente con DNI: <span className="font-semibold">{clientDni}</span>.</CardDescription>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[350px] pr-4"> {/* Reduced height slightly */}
+        <ScrollArea className="h-[350px] pr-4">
           <div className="space-y-3">
-            {renderDetailItem(<FileText size={20} />, 'Invoice Number', extractedData.invoiceNumber)}
-            {renderDetailItem(<CalendarDays size={20} />, 'Invoice Date', extractedData.invoiceDate)}
+            {renderDetailItem(<FileText size={20} />, 'Número de Factura', extractedData.invoiceNumber)}
+            {renderDetailItem(<CalendarDays size={20} />, 'Fecha de Factura', extractedData.invoiceDate)}
             <Separator />
-            {renderDetailItem(<User size={20} />, 'Client Details', extractedData.clientDetails)}
+            {renderDetailItem(<User size={20} />, 'Detalles del Cliente', extractedData.clientDetails)}
             <Separator />
-            {renderDetailItem(<Building size={20} />, 'Company Details', extractedData.companyDetails)}
+            {renderDetailItem(<Building size={20} />, 'Detalles de la Empresa', extractedData.companyDetails)}
             <Separator />
-            {renderDetailItem(<List size={20} />, 'Items', extractedData.items)}
+            {renderDetailItem(<List size={20} />, 'Ítems', extractedData.items)}
             <Separator />
-            {renderDetailItem(<DollarSign size={20} />, 'Total Amount', extractedData.totalAmount?.toLocaleString(undefined, { style: 'currency', currency: 'USD' }))}
+            {renderDetailItem(<DollarSign size={20} />, 'Monto Total', extractedData.totalAmount?.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }))}
             <Separator />
-            {renderDetailItem(<Tag size={20} />, 'Add Category Details?', extractedData.shouldAddCategory)}
-            {extractedData.shouldAddCategory && renderDetailItem(<Package size={20} />, 'Category Details', extractedData.categoryDetails)}
+            {renderDetailItem(<Tag size={20} />, '¿Agregar Detalles de Categoría?', extractedData.shouldAddCategory)}
+            {extractedData.shouldAddCategory && renderDetailItem(<Package size={20} />, 'Detalles de Categoría', extractedData.categoryDetails)}
           </div>
         </ScrollArea>
         
         <Separator className="my-6" />
 
-        <Button onClick={handleSaveInvoice} className="w-full sm:w-auto">Save Invoice</Button>
+        <Button onClick={handleSaveInvoice} className="w-full sm:w-auto">Guardar Factura</Button>
       </CardContent>
       <CardFooter>
         <p className="text-xs text-muted-foreground">
-          File: {fileName}
+          Archivo: {fileName}
         </p>
       </CardFooter>
     </Card>

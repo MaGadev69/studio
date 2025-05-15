@@ -30,11 +30,9 @@ export default function HomePage() {
   };
 
   const handleInvoiceSaved = () => {
-    // Reset to client selection, keeping client selected for potentially another invoice
-    // or reset client as well: setSelectedClient(null);
     setExtractedData(null);
     setCurrentFileName('');
-    setCurrentStep('invoice_upload'); // Go back to upload for the same client
+    setCurrentStep('invoice_upload'); 
   };
 
   const handleBackToClientSelection = () => {
@@ -55,7 +53,7 @@ export default function HomePage() {
       {currentStep !== 'client_selection' && selectedClient && (
         <Button variant="outline" onClick={currentStep === 'invoice_upload' ? handleBackToClientSelection : handleBackToUpload} className="mb-6">
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to {currentStep === 'invoice_upload' ? 'Client Selection' : 'Invoice Upload'}
+          Volver a {currentStep === 'invoice_upload' ? 'Selección de Cliente' : 'Subir Factura'}
         </Button>
       )}
 
@@ -66,7 +64,7 @@ export default function HomePage() {
       {currentStep === 'invoice_upload' && selectedClient && (
         <>
           <p className="mb-4 text-lg">
-            Selected Client: <span className="font-semibold">{selectedClient.name} (DNI: {selectedClient.dni})</span>
+            Cliente Seleccionado: <span className="font-semibold">{selectedClient.name} (DNI: {selectedClient.dni})</span>
           </p>
           <InvoiceUploader onDataExtracted={handleDataExtracted} />
         </>
@@ -75,7 +73,7 @@ export default function HomePage() {
       {currentStep === 'data_display' && selectedClient && extractedData && (
         <>
           <p className="mb-4 text-lg">
-            Invoice for Client: <span className="font-semibold">{selectedClient.name} (DNI: {selectedClient.dni})</span>
+            Factura para Cliente: <span className="font-semibold">{selectedClient.name} (DNI: {selectedClient.dni})</span>
           </p>
           <InvoiceDataDisplay
             extractedData={extractedData}

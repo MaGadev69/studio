@@ -17,8 +17,8 @@ interface InvoiceUploaderProps {
 
 export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewDataUrl, setPreviewDataUrl] = useState<string | null>(null); // For file or camera preview
-  const [isBusy, setIsBusy] = useState(false); // Combines file reading and AI extraction
+  const [previewDataUrl, setPreviewDataUrl] = useState<string | null>(null); 
+  const [isBusy, setIsBusy] = useState(false); 
   
   const [showCamera, setShowCamera] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
@@ -28,7 +28,6 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Cleanup stream on component unmount or when camera is closed
     return () => {
       if (videoRef.current?.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
@@ -39,14 +38,14 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
 
 
   const requestCameraPermission = async () => {
-    if (showCamera && videoRef.current?.srcObject) { // Camera already open
+    if (showCamera && videoRef.current?.srcObject) { 
         setShowCamera(false);
         if (videoRef.current?.srcObject) {
             const stream = videoRef.current.srcObject as MediaStream;
             stream.getTracks().forEach(track => track.stop());
             videoRef.current.srcObject = null;
         }
-        setHasCameraPermission(null); // Reset permission status
+        setHasCameraPermission(null); 
         return;
     }
 
@@ -59,12 +58,12 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
         videoRef.current.srcObject = stream;
       }
     } catch (error) {
-      console.error('Error accessing camera:', error);
+      console.error('Error al acceder a la cámara:', error);
       setHasCameraPermission(false);
       toast({
         variant: 'destructive',
-        title: 'Camera Access Denied',
-        description: 'Please enable camera permissions in your browser settings.',
+        title: 'Acceso a Cámara Denegado',
+        description: 'Por favor, habilita los permisos de cámara en la configuración de tu navegador.',
       });
       setShowCamera(false);
     } finally {
@@ -84,8 +83,8 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         const dataUri = canvas.toDataURL('image/jpeg');
         setPreviewDataUrl(dataUri);
-        setSelectedFile(null); // Clear selected file if any
-        setShowCamera(false); // Close camera after capture
+        setSelectedFile(null); 
+        setShowCamera(false); 
          if (videoRef.current?.srcObject) {
             const stream = videoRef.current.srcObject as MediaStream;
             stream.getTracks().forEach(track => track.stop());
@@ -93,7 +92,7 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
         }
         setIsBusy(false);
       } else {
-        toast({ title: 'Capture Error', description: 'Could not capture photo.', variant: 'destructive' });
+        toast({ title: 'Error de Captura', description: 'No se pudo capturar la foto.', variant: 'destructive' });
         setIsBusy(false);
       }
     }
@@ -104,9 +103,8 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
       setSelectedFile(file);
-      setPreviewDataUrl(null); // Clear camera preview if any
+      setPreviewDataUrl(null); 
 
-      // Create a preview for the selected file
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewDataUrl(reader.result as string);
@@ -124,35 +122,32 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
     try {
       const result = await extractInvoiceData({ invoiceDataUri: dataUri });
       onDataExtracted(result, fileName);
-      toast({ title: 'Data Extracted', description: 'Invoice data has been successfully extracted.' });
+      toast({ title: 'Datos Extraídos', description: 'Los datos de la factura se han extraído correctamente.' });
     } catch (aiError) {
-      console.error('AI Extraction Error:', aiError);
-      toast({ title: 'Extraction Error', description: 'Failed to extract data using AI. Please try again.', variant: 'destructive' });
+      console.error('Error de extracción IA:', aiError);
+      toast({ title: 'Error de Extracción', description: 'Error al extraer datos con IA. Por favor, inténtalo de nuevo.', variant: 'destructive' });
     } finally {
       setIsBusy(false);
-      // Reset previews after processing
-      // setPreviewDataUrl(null); 
-      // setSelectedFile(null);
     }
   };
 
 
   const handleSubmit = async () => {
-    if (previewDataUrl && !selectedFile) { // Captured from camera
-      processDataUri(previewDataUrl, `webcam-capture-${new Date().toISOString()}.jpg`);
-    } else if (selectedFile) { // Uploaded file
+    if (previewDataUrl && !selectedFile) { 
+      processDataUri(previewDataUrl, `captura-webcam-${new Date().toISOString()}.jpg`);
+    } else if (selectedFile) { 
       const reader = new FileReader();
       reader.onload = () => {
         processDataUri(reader.result as string, selectedFile.name);
       };
       reader.onerror = (error) => {
-        console.error('Error reading file:', error);
-        toast({ title: 'File Read Error', description: 'Could not read the selected file.', variant: 'destructive' });
+        console.error('Error al leer archivo:', error);
+        toast({ title: 'Error al Leer Archivo', description: 'No se pudo leer el archivo seleccionado.', variant: 'destructive' });
         setIsBusy(false);
       };
       reader.readAsDataURL(selectedFile);
     } else {
-       toast({ title: 'No image source', description: 'Please upload a file or capture a photo.', variant: 'destructive' });
+       toast({ title: 'Ninguna fuente de imagen', description: 'Por favor, sube un archivo o captura una foto.', variant: 'destructive' });
     }
   };
   
@@ -163,7 +158,7 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
       <CardHeader>
         <CardTitle className="flex items-center">
           <UploadCloud className="mr-2 h-6 w-6 text-primary" />
-          Upload or Capture Invoice Image
+          Subir o Capturar Imagen de Factura
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -176,12 +171,12 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
               onChange={handleFileChange} 
               disabled={inputDisabled}
             />
-            {selectedFile && <p className="text-sm text-muted-foreground pt-1">Selected: {selectedFile.name}</p>}
+            {selectedFile && <p className="text-sm text-muted-foreground pt-1">Seleccionado: {selectedFile.name}</p>}
           </div>
 
           <Button onClick={requestCameraPermission} variant="outline" disabled={isBusy} className="w-full sm:w-auto">
             {showCamera && videoRef.current?.srcObject ? <VideoOff className="mr-2 h-4 w-4" /> : <Camera className="mr-2 h-4 w-4" />}
-            {showCamera && videoRef.current?.srcObject ? 'Close Camera' : 'Use Webcam'}
+            {showCamera && videoRef.current?.srcObject ? 'Cerrar Cámara' : 'Usar Cámara Web'}
           </Button>
 
           {showCamera && (
@@ -190,25 +185,25 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
               {hasCameraPermission === false && (
                  <Alert variant="destructive">
                   <AlertTriangle className="h-4 w-4" />
-                  <AlertTitle>Camera Access Denied</AlertTitle>
+                  <AlertTitle>Acceso a Cámara Denegado</AlertTitle>
                   <AlertDescription>
-                    Please enable camera permissions in your browser settings. You might need to refresh the page.
+                    Por favor, habilita los permisos de cámara en la configuración de tu navegador. Es posible que necesites refrescar la página.
                   </AlertDescription>
                 </Alert>
               )}
               {hasCameraPermission && (
                 <Button onClick={handleCapturePhoto} disabled={isBusy} className="w-full sm:w-auto">
-                  Capture Photo
+                  Capturar Foto
                 </Button>
               )}
             </div>
           )}
-          <canvas ref={canvasRef} className="hidden" /> {/* Hidden canvas for capture */}
+          <canvas ref={canvasRef} className="hidden" />
 
           {previewDataUrl && (
             <div className="mt-4 border rounded-md p-2">
-              <p className="text-sm font-medium mb-2">Preview:</p>
-              <img src={previewDataUrl} alt="Invoice preview" className="max-w-full max-h-60 rounded-md object-contain" data-ai-hint="invoice document" />
+              <p className="text-sm font-medium mb-2">Vista Previa:</p>
+              <img src={previewDataUrl} alt="Vista previa de factura" className="max-w-full max-h-60 rounded-md object-contain" data-ai-hint="invoice document" />
             </div>
           )}
 
@@ -218,7 +213,7 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
             ) : (
               <UploadCloud className="mr-2 h-4 w-4" />
             )}
-            {isBusy ? 'Processing...' : 'Extract Data'}
+            {isBusy ? 'Procesando...' : 'Extraer Datos'}
           </Button>
         </div>
       </CardContent>
