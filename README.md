@@ -1,32 +1,88 @@
-Asegúrate de tener Node.js y npm (o yarn/pnpm) instalados. Puedes descargarlos desde nodejs.org.
+# DocuContador - App para contadores con clientes profesionales
 
-Descarga el código del proyecto a tu máquina local (como mencionamos antes, a través de Git o una opción de descarga de Firebase Studio).
+## Fecha
 
-Abre una terminal o línea de comandos en la carpeta raíz del proyecto (donde se encuentra el archivo package.json).
+15/05/2025
 
-Instala las dependencias del proyecto:
+---
 
-npm install
-o si usas Yarn:
+## 🎯 Pitch Breve
 
-yarn install
-o si usas PNPM:
+**Nombre tentativo:** `DocuContador`
 
-pnpm install
-Ejecuta el servidor de desarrollo de Next.js: Este comando iniciará la aplicación web.
+### Problema
 
-npm run dev
-Según tu package.json, esto correrá la aplicación en http://localhost:9002.
+Los contadores que trabajan con profesionales independientes (médicos, abogados, técnicos, etc.) pierden mucho tiempo recolectando y ordenando comprobantes, ya que sus clientes no tienen un flujo sistemático para enviarlos. Esto causa demoras, errores y estrés en fechas clave fiscales.
 
-Ejecuta el servidor de desarrollo de Genkit (en otra terminal): Si vas a utilizar las funcionalidades de IA que usan Genkit, necesitarás iniciar también el servidor de Genkit. Abre una nueva terminal en la misma carpeta del proyecto y ejecuta:
+### Solución
 
-npm run genkit:dev
-o si prefieres que se reinicie automáticamente con los cambios en los flujos de Genkit:
+Una app simple y mobile-first donde los clientes puedan subir fácilmente sus facturas, tickets y documentos desde el celular (foto o PDF).  
+El contador accede a una plataforma web con toda la información ordenada por cliente, mes, tipo y monto, lista para exportar a Excel o sistemas contables.
 
-npm run genkit:watch
-En resumen:
+---
 
-Terminal 1: npm install (solo la primera vez) y luego npm run dev
-Terminal 2: npm run genkit:dev (o genkit:watch)
+## 🧩 MVP Funcional
 
-Con estos dos servidores en ejecución, deberías poder acceder a tu aplicación MVP-Estudio-Sanchez en el navegador (usualmente en http://localhost:9002) y las funciones de IA deberían estar operativas.
+### 📱 Frontend Mobile (para el cliente profesional)
+
+**Pantallas:**
+
+1. **Inicio**
+   - Botones: `Subir PDF`, `Sacar Foto`, `Ver Documentos`
+
+2. **Subir Documento**
+   - Opción para tomar foto o seleccionar archivo
+   - Campo opcional: categoría (alquiler, servicio, honorario, insumo)
+   - Botón: `Enviar`
+
+3. **Mis Documentos**
+   - Lista con fecha, tipo y estado (procesado/no procesado)
+   - Filtros por mes o categoría
+   - Icono para eliminar o re-subir
+
+---
+
+### 🖥️ Frontend Web (para el contador)
+
+**Panel principal:**
+
+- Lista de clientes
+- Indicadores por mes: cantidad de documentos, porcentaje cargado, alertas de faltantes
+- Filtros por cliente, fecha, categoría
+- Acciones:
+  - Exportar a Excel
+  - Marcar documento como `validado` o `rechazado`
+
+---
+
+### 🔧 Backend (API y lógica)
+
+**Tecnologías sugeridas:**
+
+- Node.js + Express / Django REST
+- Base de datos: PostgreSQL o Firebase
+- Almacenamiento de archivos: AWS S3, Firebase Storage o similar
+- OCR: Tesseract (on-device) o Google Vision API / AWS Textract
+
+**Endpoints básicos:**
+
+- `POST /documento`: subir documento
+- `GET /documentos?cliente=...&mes=...`: listar documentos
+- `GET /clientes`: listar clientes (solo contador)
+- `PUT /documento/:id`: actualizar estado o categoría
+- `GET /exportar`: generar Excel por cliente y período
+
+---
+
+### 🔐 Seguridad
+
+- Autenticación con JWT o Firebase Auth
+- Cada usuario ve solo sus propios documentos
+- El contador accede al panel con todos los clientes
+
+---
+
+## 📌 Estado
+
+> Documento generado como base para desarrollo y presentación.  
+> Versión inicial del pitch funcional y técnico.
