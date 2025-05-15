@@ -1,3 +1,4 @@
+
 // src/components/invoice/invoice-uploader.tsx
 'use client';
 
@@ -6,7 +7,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, UploadCloud, Camera, VideoOff, AlertTriangle } from 'lucide-react';
+import { Loader2, UploadCloud, Camera, VideoOff, AlertTriangle, SwitchCamera } from 'lucide-react';
 import { extractInvoiceData, type SmartDataExtractionOutput } from '@/ai/flows/smart-data-extraction';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -25,38 +26,51 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('environment');
+  const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
+  const [hasMultipleCameras, setHasMultipleCameras] = useState(false);
+
   const { toast } = useToast();
 
   useEffect(() => {
+    // Cleanup mediaStream when component unmounts
     return () => {
-      if (videoRef.current?.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
       }
     };
-  }, []);
+  }, [mediaStream]);
 
+  const startCamera = async (mode: 'user' | 'environment') => {
+    setIsBusy(true);
+    setHasCameraPermission(null); // Reset while trying
 
-  const requestCameraPermission = async () => {
-    if (showCamera && videoRef.current?.srcObject) { 
-        setShowCamera(false);
-        if (videoRef.current?.srcObject) {
-            const stream = videoRef.current.srcObject as MediaStream;
-            stream.getTracks().forEach(track => track.stop());
-            videoRef.current.srcObject = null;
-        }
-        setHasCameraPermission(null); 
-        return;
+    // Stop any existing stream before starting a new one
+    if (mediaStream) {
+      mediaStream.getTracks().forEach(track => track.stop());
+    }
+    if (videoRef.current?.srcObject) {
+        const currentStream = videoRef.current.srcObject as MediaStream;
+        currentStream.getTracks().forEach(track => track.stop());
+        videoRef.current.srcObject = null;
     }
 
-    setShowCamera(true);
-    setIsBusy(true);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: mode } });
       setHasCameraPermission(true);
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        videoRef.current.muted = true; // Important for preventing audio feedback
       }
+      setMediaStream(stream);
+      setFacingMode(mode); // Update current facing mode
+      setShowCamera(true); // Ensure camera view is shown
+
+      // Check for multiple cameras
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videoInputs = devices.filter(device => device.kind === 'videoinput');
+      setHasMultipleCameras(videoInputs.length > 1);
+
     } catch (error) {
       console.error('Error al acceder a la cámara:', error);
       setHasCameraPermission(false);
@@ -65,14 +79,45 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
         title: 'Acceso a Cámara Denegado',
         description: 'Por favor, habilita los permisos de cámara en la configuración de tu navegador.',
       });
-      setShowCamera(false);
+      setShowCamera(false); // Hide camera view on error
+      setMediaStream(null);
+      setHasMultipleCameras(false);
     } finally {
       setIsBusy(false);
     }
   };
 
+  const stopCamera = () => {
+    if (mediaStream) {
+      mediaStream.getTracks().forEach(track => track.stop());
+    }
+     if (videoRef.current?.srcObject) {
+        const currentStream = videoRef.current.srcObject as MediaStream;
+        currentStream.getTracks().forEach(track => track.stop());
+        videoRef.current.srcObject = null;
+    }
+    setMediaStream(null);
+    setShowCamera(false);
+    setHasCameraPermission(null);
+    setHasMultipleCameras(false);
+  };
+
+  const handleToggleCameraAccess = () => {
+    if (showCamera || mediaStream) { // If camera is currently on or stream exists
+      stopCamera();
+    } else { // If camera is off
+      startCamera(facingMode); // Start with the current/default facing mode ('environment')
+    }
+  };
+
+  const handleSwitchCamera = () => {
+    if (!hasMultipleCameras || !showCamera || !mediaStream) return; 
+    const newMode = facingMode === 'environment' ? 'user' : 'environment';
+    startCamera(newMode); 
+  };
+
   const handleCapturePhoto = () => {
-    if (videoRef.current && canvasRef.current && hasCameraPermission) {
+    if (videoRef.current && canvasRef.current && hasCameraPermission && mediaStream) {
       setIsBusy(true);
       const video = videoRef.current;
       const canvas = canvasRef.current;
@@ -84,12 +129,7 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
         const dataUri = canvas.toDataURL('image/jpeg');
         setPreviewDataUrl(dataUri);
         setSelectedFile(null); 
-        setShowCamera(false); 
-         if (videoRef.current?.srcObject) {
-            const stream = videoRef.current.srcObject as MediaStream;
-            stream.getTracks().forEach(track => track.stop());
-            videoRef.current.srcObject = null;
-        }
+        stopCamera(); // Stop and close camera after capture
         setIsBusy(false);
       } else {
         toast({ title: 'Error de Captura', description: 'No se pudo capturar la foto.', variant: 'destructive' });
@@ -104,6 +144,7 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
       const file = event.target.files[0];
       setSelectedFile(file);
       setPreviewDataUrl(null); 
+      stopCamera(); // Close camera if a file is selected
 
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -152,6 +193,7 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
   };
   
   const inputDisabled = isBusy || showCamera;
+  const isCameraActive = showCamera && mediaStream;
 
   return (
     <Card className="w-full shadow-lg">
@@ -174,15 +216,25 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
             {selectedFile && <p className="text-sm text-muted-foreground pt-1">Seleccionado: {selectedFile.name}</p>}
           </div>
 
-          <Button onClick={requestCameraPermission} variant="outline" disabled={isBusy} className="w-full sm:w-auto">
-            {showCamera && videoRef.current?.srcObject ? <VideoOff className="mr-2 h-4 w-4" /> : <Camera className="mr-2 h-4 w-4" />}
-            {showCamera && videoRef.current?.srcObject ? 'Cerrar Cámara' : 'Usar Cámara Web'}
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Button onClick={handleToggleCameraAccess} variant="outline" disabled={isBusy} className="w-full sm:w-auto">
+              {isCameraActive ? <VideoOff className="mr-2 h-4 w-4" /> : <Camera className="mr-2 h-4 w-4" />}
+              {isCameraActive ? 'Cerrar Cámara' : 'Usar Cámara Web'}
+            </Button>
+
+            {isCameraActive && hasMultipleCameras && (
+              <Button onClick={handleSwitchCamera} variant="outline" disabled={isBusy} className="w-full sm:w-auto">
+                <SwitchCamera className="mr-2 h-4 w-4" />
+                Cambiar a Cámara {facingMode === 'environment' ? 'Frontal' : 'Trasera'}
+              </Button>
+            )}
+          </div>
+
 
           {showCamera && (
             <div className="space-y-2">
-              <video ref={videoRef} className="w-full aspect-video rounded-md border bg-muted" autoPlay muted playsInline />
-              {hasCameraPermission === false && (
+              <video ref={videoRef} className="w-full aspect-video rounded-md border bg-muted" autoPlay playsInline />
+              {hasCameraPermission === false && ( // Show only if explicitly denied or error
                  <Alert variant="destructive">
                   <AlertTriangle className="h-4 w-4" />
                   <AlertTitle>Acceso a Cámara Denegado</AlertTitle>
@@ -191,7 +243,7 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
                   </AlertDescription>
                 </Alert>
               )}
-              {hasCameraPermission && (
+              {isCameraActive && hasCameraPermission && (
                 <Button onClick={handleCapturePhoto} disabled={isBusy} className="w-full sm:w-auto">
                   Capturar Foto
                 </Button>
@@ -220,3 +272,4 @@ export function InvoiceUploader({ onDataExtracted }: InvoiceUploaderProps) {
     </Card>
   );
 }
+
