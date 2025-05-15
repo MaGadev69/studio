@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'InvoiceAI',
+  title: 'Documentos_AI',
   description: 'AI-powered invoice data extraction and management',
 };
 
